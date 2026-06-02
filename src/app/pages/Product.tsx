@@ -1,10 +1,15 @@
 import { Star, Heart, ShoppingCart, Truck, Shield, RotateCcw } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router';
+import { useState } from 'react';
 import Layout from '../components/Layout';
 
 export default function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [quantity, setQuantity] = useState(1);
+
+  const basePrice = 299.90;
+  const totalPrice = (basePrice * quantity).toFixed(2);
 
   return (
     <Layout>
@@ -13,13 +18,22 @@ export default function Product() {
           <div>
             <div className="bg-gray-100 rounded-lg p-8 mb-4">
               <div className="aspect-square flex items-center justify-center">
-                <span className="text-gray-400">Imagem do Produto #{id}</span>
+                <img
+                  src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080"
+                  alt="Tênis Esportivo Pro"
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
             </div>
             <div className="grid grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-gray-100 rounded-lg p-4 aspect-square flex items-center justify-center cursor-pointer hover:border-2 hover:border-gray-900 transition-all">
-                  <span className="text-xs text-gray-400">{i}</span>
+              {[
+                'https://images.unsplash.com/photo-1560769629-975ec94e6a86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=300',
+                'https://images.unsplash.com/photo-1631087606988-a6be38fccaf6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=300',
+                'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=300',
+                'https://images.unsplash.com/photo-1631542156377-473540702434?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=300',
+              ].map((img, i) => (
+                <div key={i} className="bg-gray-100 rounded-lg overflow-hidden aspect-square cursor-pointer hover:border-2 hover:border-gray-900 transition-all">
+                  <img src={img} alt={`Vista ${i + 1}`} className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -38,9 +52,14 @@ export default function Product() {
             </div>
 
             <div className="mb-6">
-              <p className="text-4xl font-bold text-gray-900 mb-2">R$ 299,90</p>
+              <p className="text-4xl font-bold text-gray-900 mb-2">R$ {totalPrice}</p>
               <p className="text-sm text-gray-600 line-through">R$ 399,90</p>
               <p className="text-sm text-green-600 font-semibold">25% de desconto</p>
+              {quantity > 1 && (
+                <p className="text-sm text-blue-600 font-semibold mt-1">
+                  R$ {basePrice.toFixed(2)} cada × {quantity} unidades
+                </p>
+              )}
             </div>
 
             <div className="mb-6">
@@ -74,11 +93,18 @@ export default function Product() {
             <div className="mb-6">
               <h3 className="font-semibold mb-3">Quantidade</h3>
               <div className="flex items-center gap-3">
-                <button className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50 font-bold">
+                <button
+                  onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+                  disabled={quantity <= 1}
+                  className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   -
                 </button>
-                <span className="w-12 text-center font-semibold">1</span>
-                <button className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50 font-bold">
+                <span className="w-12 text-center font-semibold">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50 font-bold"
+                >
                   +
                 </button>
               </div>

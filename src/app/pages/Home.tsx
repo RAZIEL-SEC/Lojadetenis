@@ -1,19 +1,43 @@
 import { Star, Heart, ShoppingCart, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { useState } from 'react';
 import vansImage from '../../imports/vans.png';
 import Layout from '../components/Layout';
 
-const ProductGrid = () => {
+const ProductGrid = ({ currentPage }: { currentPage: number }) => {
   const navigate = useNavigate();
 
-  const products = [
-    { id: 1, name: 'Tênis Esportivo Pro', price: 'R$ 299,90', rating: 5, image: '' },
-    { id: 2, name: 'Tênis Casual Comfort', price: 'R$ 249,90', rating: 4, image: '' },
-    { id: 3, name: 'Tênis Running Ultra', price: 'R$ 399,90', rating: 5, image: '' },
-    { id: 4, name: 'Tênis Lifestyle Premium', price: 'R$ 349,90', rating: 4, image: '' },
-    { id: 5, name: 'Tênis Training Max', price: 'R$ 279,90', rating: 5, image: '' },
-    { id: 6, name: 'Tênis Urban Style', price: 'R$ 329,90', rating: 4, image: '' },
+  const allProducts = [
+    { id: 1, name: 'Tênis Esportivo Pro', price: 'R$ 299,90', rating: 5, image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 2, name: 'Tênis Casual Comfort', price: 'R$ 249,90', rating: 4, image: 'https://images.unsplash.com/photo-1631087606988-a6be38fccaf6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 3, name: 'Tênis Running Ultra', price: 'R$ 399,90', rating: 5, image: 'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzcG9ydCUyMHNob2VzJTIwcnVubmluZ3xlbnwxfHx8fDE3ODAzNTgyNDd8MA&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 4, name: 'Tênis Lifestyle Premium', price: 'R$ 349,90', rating: 4, image: 'https://images.unsplash.com/photo-1631542156377-473540702434?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 5, name: 'Tênis Training Max', price: 'R$ 279,90', rating: 5, image: 'https://images.unsplash.com/photo-1620656569905-6985bfe37d00?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw0fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 6, name: 'Tênis Urban Style', price: 'R$ 329,90', rating: 4, image: 'https://images.unsplash.com/photo-1618153478389-b2ed8de18ed3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw1fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 7, name: 'Tênis Basketball Pro', price: 'R$ 459,90', rating: 5, image: 'https://images.unsplash.com/photo-1715693754061-fa58592c2e7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw2fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 8, name: 'Tênis Skatista', price: 'R$ 289,90', rating: 4, image: 'https://images.unsplash.com/photo-1715693754067-8a0b8fc4c230?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw3fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 9, name: 'Tênis Performance', price: 'R$ 319,90', rating: 5, image: 'https://images.unsplash.com/photo-1715692965423-28e7b823a60d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw4fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 10, name: 'Tênis Classic', price: 'R$ 269,90', rating: 4, image: 'https://images.unsplash.com/photo-1715773408837-b7074beb12d5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw5fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 11, name: 'Tênis Speed', price: 'R$ 339,90', rating: 5, image: 'https://images.unsplash.com/photo-1715773150368-55945728385a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxMHx8bWVuJTIwc25lYWtlcnMlMjBzaG9lc3xlbnwxfHx8fDE3ODAzNTgyNDZ8MA&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 12, name: 'Tênis Comfort Plus', price: 'R$ 299,90', rating: 4, image: 'https://images.unsplash.com/photo-1597892657493-6847b9640bac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxzcG9ydCUyMHNob2VzJTIwcnVubmluZ3xlbnwxfHx8fDE3ODAzNTgyNDd8MA&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 13, name: 'Tênis Elite Runner', price: 'R$ 429,90', rating: 5, image: 'https://images.unsplash.com/photo-1585944672394-4c58a015c1fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxzcG9ydCUyMHNob2VzJTIwcnVubmluZ3xlbnwxfHx8fDE3ODAzNTgyNDd8MA&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 14, name: 'Tênis Street Style', price: 'R$ 259,90', rating: 4, image: 'https://images.unsplash.com/photo-1587587448924-b5a1db520d29?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw0fHxzcG9ydCUyMHNob2VzJTIwcnVubmluZ3xlbnwxfHx8fDE3ODAzNTgyNDd8MA&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 15, name: 'Tênis Flex Max', price: 'R$ 349,90', rating: 5, image: 'https://images.unsplash.com/photo-1582588678413-dbf45f4823e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw1fHxzcG9ydCUyMHNob2VzJTIwcnVubmluZ3xlbnwxfHx8fDE3ODAzNTgyNDd8MA&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 16, name: 'Tênis Air Motion', price: 'R$ 389,90', rating: 4, image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 17, name: 'Tênis Trail Pro', price: 'R$ 369,90', rating: 5, image: 'https://images.unsplash.com/photo-1631087606988-a6be38fccaf6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 18, name: 'Tênis Dynamic', price: 'R$ 309,90', rating: 4, image: 'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzcG9ydCUyMHNob2VzJTIwcnVubmluZ3xlbnwxfHx8fDE3ODAzNTgyNDd8MA&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 19, name: 'Tênis Velocity', price: 'R$ 329,90', rating: 5, image: 'https://images.unsplash.com/photo-1631542156377-473540702434?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 20, name: 'Tênis Sport Max', price: 'R$ 289,90', rating: 4, image: 'https://images.unsplash.com/photo-1620656569905-6985bfe37d00?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw0fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 21, name: 'Tênis Power Step', price: 'R$ 359,90', rating: 5, image: 'https://images.unsplash.com/photo-1618153478389-b2ed8de18ed3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw1fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 22, name: 'Tênis Boost Energy', price: 'R$ 379,90', rating: 4, image: 'https://images.unsplash.com/photo-1715693754061-fa58592c2e7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw2fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 23, name: 'Tênis Endurance', price: 'R$ 399,90', rating: 5, image: 'https://images.unsplash.com/photo-1715693754067-8a0b8fc4c230?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw3fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
+    { id: 24, name: 'Tênis Supreme Fit', price: 'R$ 419,90', rating: 4, image: 'https://images.unsplash.com/photo-1715692965423-28e7b823a60d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw4fHxtZW4lMjBzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc4MDM1ODI0Nnww&ixlib=rb-4.1.0&q=80&w=1080' },
   ];
+
+  const itemsPerPage = 6;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const products = allProducts.slice(startIndex, endIndex);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -23,8 +47,8 @@ const ProductGrid = () => {
           className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
           onClick={() => navigate(`/produto/${product.id}`)}
         >
-          <div className="relative bg-gray-100 h-64 flex items-center justify-center">
-            <div className="absolute top-3 right-3 flex gap-2">
+          <div className="relative bg-gray-100 h-64 flex items-center justify-center overflow-hidden">
+            <div className="absolute top-3 right-3 flex gap-2 z-10">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -42,11 +66,7 @@ const ProductGrid = () => {
                 <ShoppingCart className="w-5 h-5 text-gray-600" />
               </button>
             </div>
-            {product.image ? (
-              <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-gray-400 text-sm">Adicione uma imagem</span>
-            )}
+            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
           </div>
 
           <div className="p-4">
@@ -74,6 +94,8 @@ const ProductGrid = () => {
 
 export default function Home() {
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 4;
 
   return (
     <Layout>
@@ -224,26 +246,35 @@ export default function Home() {
                 </select>
               </div>
             </div>
-            <p className="text-sm text-gray-600 mb-6">Exibindo 6 itens</p>
-            <ProductGrid />
+            <p className="text-sm text-gray-600 mb-6">Exibindo 6 itens (Página {currentPage} de {totalPages})</p>
+            <ProductGrid currentPage={currentPage} />
 
             <div className="flex items-center justify-center gap-2 mt-8">
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <button
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Anterior
               </button>
-              <button className="px-4 py-2 bg-gray-900 text-white rounded-lg font-semibold">
-                1
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                2
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                3
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                4
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              {[1, 2, 3, 4].map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    currentPage === page
+                      ? 'bg-gray-900 text-white'
+                      : 'border border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Próximo
               </button>
             </div>
